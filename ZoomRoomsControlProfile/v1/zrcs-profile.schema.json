@@ -7,6 +7,11 @@
   "required": ["adapters"],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "URL of the JSON Schema this profile conforms to. Used by editors (VS Code, etc.) to enable validation, autocomplete, and hover documentation. Has no runtime effect — Zoom Rooms ignores it.",
+      "format": "uri"
+    },
     "info": {
       "type": "object",
       "description": "Optional metadata header. Ignored by Zoom Rooms — purely for human/tooling reference.",
