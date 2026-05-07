@@ -360,7 +360,7 @@
             "action",
             "actions"
           ],
-          "description": "Method type. 'actions' is the common case \u2014 a command that takes a substituted parameter. 'action' indicates a fixed command with no substitution; in the Zoom-supplied DTEN TV example, the power method uses 'action' (no '%' in the command, no params). The two-mode design lets you tell Zoom not to attempt substitution on a fixed command."
+          "description": "Method type. 'actions' (plural) is for commands that take a substituted parameter \u2014 'params' must be present, otherwise Zoom Rooms loads the profile but silently renders no buttons for the method (verified on Zoom Room 6.6.1). 'action' (singular) is a fixed command with no substitution \u2014 'params' must be absent, otherwise Zoom rejects the entire profile. The Zoom-supplied DTEN TV example uses 'action' for power (no '%' in the command, no params)."
         },
         "params": {
           "type": "array",
@@ -384,6 +384,44 @@
                 "pattern": "%"
               }
             }
+          },
+          "then": {
+            "required": [
+              "params"
+            ]
+          }
+        },
+        {
+          "comment": "type='action' is for parameterless commands. If params is present, Zoom rejects the entire profile (verified on Zoom Room 6.6.1).",
+          "if": {
+            "properties": {
+              "type": {
+                "const": "action"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "params"
+              ]
+            }
+          }
+        },
+        {
+          "comment": "type='actions' requires params. Without params, Zoom loads the profile but silently renders no buttons for the method (verified on Zoom Room 6.6.1).",
+          "if": {
+            "properties": {
+              "type": {
+                "const": "actions"
+              }
+            },
+            "required": [
+              "type"
+            ]
           },
           "then": {
             "required": [
@@ -482,8 +520,8 @@
     },
     "styleEntry": {
       "type": "string",
-      "description": "Either the literal 'zr_event_only=true' or a documented dot-notation key=value override. Allowed forms (per Zoom docs and supplied examples):\n  \u2022 <deviceId>.main_method=<methodId> \u2014 set the main button on a device tile (device level only)\n  \u2022 <deviceId>.name=<displayName> \u2014 override the device's displayed name\n  \u2022 <deviceId>.<methodId>.name=<displayName> \u2014 override a method's displayed name\n  \u2022 <deviceId>.invisible=true|false \u2014 hide the entire device\n  \u2022 <deviceId>.<methodId>.invisible=true|false \u2014 hide a specific method\n  \u2022 <deviceId>.icon=<iconValue> \u2014 device-level icon\n  \u2022 <deviceId>.<methodId>.icon=<iconValue> \u2014 method-level icon\n  \u2022 <deviceId>.<methodId>.<paramId>.icon=<iconValue> \u2014 param-level icon\nIcon values may be a built-in token (e.g. 'icon_projector') or an MDI reference of the form 'mdi:<icon_name>:<style_name>' where style_name is one of outlined|filled|rounded|sharp|two_tone (all lowercase, spaces replaced with underscores).",
-      "pattern": "^(zr_event_only=true|[A-Za-z0-9_]+\\.main_method=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)?\\.name=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)?\\.invisible=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+){0,2}\\.icon=.+)$"
+      "description": "Either the literal 'zr_event_only=true' or a documented dot-notation key=value override. Allowed forms (per Zoom docs and supplied examples):\n  \u2022 <deviceId>.main_method=<methodId> \u2014 set the main button on a device tile (device level only)\n  \u2022 <deviceId>.name=<displayName> \u2014 override the device's displayed name\n  \u2022 <deviceId>.<methodId>.name=<displayName> \u2014 override a method's displayed name\n  \u2022 <deviceId>.invisible=true|false \u2014 hide the entire device\n  \u2022 <deviceId>.<methodId>.invisible=true|false \u2014 hide a specific method\n  \u2022 <deviceId>.icon=<iconValue> \u2014 device-level icon\n  \u2022 <deviceId>.<methodId>.icon=<iconValue> \u2014 method-level icon\n  \u2022 <deviceId>.<methodId>.<paramId>.icon=<iconValue> \u2014 param-level icon\nIcon values must be either a built-in token (e.g. 'icon_projector' \u2014 Zoom built-ins all start with 'icon_') or an MDI reference of the form 'mdi:<icon_name>:<style_name>'. The style_name suffix is required despite the docs implying it is optional \u2014 Zoom Rooms shows no icon on web (or the default magic-wand fallback on iPad) when the variant is missing or unrecognized. Allowed style_names are filled, outlined, rounded, sharp, two_tone (all lowercase, spaces in icon_name replaced with underscores). Verified on Zoom Room 6.6.1.",
+      "pattern": "^(zr_event_only=true|[A-Za-z0-9_]+\\.main_method=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)?\\.name=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)?\\.invisible=.+|[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+){0,2}\\.icon=(icon_[A-Za-z0-9_]+|mdi:[A-Za-z0-9_]+:(filled|outlined|rounded|sharp|two_tone)))$"
     }
   }
 }
