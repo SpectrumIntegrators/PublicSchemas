@@ -241,8 +241,8 @@
     },
     "genericNetworkUrl": {
       "type": "string",
-      "description": "GenericNetworkAdapter URL of the form 'tcp://<private-ipv4>:<port>' or 'udp://<private-ipv4>:<port>'. Hostnames are not allowed \u2014 IPv4 only. Public IPs are rejected by Zoom (ZRCSErrorCode_IP_Is_Public). Port must be in the range 1-65535.",
-      "pattern": "^(tcp|udp)://(10\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|172\\.(1[6-9]|2[0-9]|3[01])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|192\\.168\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])):(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{0,3})$"
+      "description": "GenericNetworkAdapter URL of the form 'tcp://<host>:<port>' or 'udp://<host>:<port>'. Host may be a private IPv4 address (RFC 1918), the limited broadcast address 255.255.255.255 (used for UDP broadcasts like Wake-on-LAN), or a hostname \u2014 Zoom Rooms supports all three in current software versions per the published docs and observed behavior. Anything else that looks like a numeric IP must fall in a private range; public IPs are rejected by Zoom (ZRCSErrorCode_IP_Is_Public). Port must be in the range 1-65535.",
+      "pattern": "^(tcp|udp)://(10\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|172\\.(1[6-9]|2[0-9]|3[01])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|192\\.168\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|255\\.255\\.255\\.255|(?![0-9.]+:)[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*):(6553[0-5]|655[0-2][0-9]|65[0-4][0-9]{2}|6[0-4][0-9]{3}|[1-5][0-9]{4}|[1-9][0-9]{0,3})$"
     },
     "port": {
       "type": "object",
@@ -480,11 +480,20 @@
             "$ref": "#/definitions/commandRef"
           }
         },
+        "icon": {
+          "$ref": "#/definitions/iconValue",
+          "description": "Optional icon for the scene button. Either a built-in token (e.g. 'icon_alert') or an MDI reference 'mdi:<name>:<style>'."
+        },
         "$comment": {
           "type": "string",
           "description": "Optional inline comment for documentation. Ignored by Zoom Rooms and by the schema validator \u2014 purely human-facing."
         }
       }
+    },
+    "iconValue": {
+      "type": "string",
+      "description": "Either a built-in icon token (e.g. 'icon_projector' \u2014 Zoom built-ins all start with 'icon_') or an MDI reference of the form 'mdi:<icon_name>:<style_name>'. Allowed style_names are filled, outlined, rounded, sharp, two_tone (all lowercase, spaces in icon_name replaced with underscores).",
+      "pattern": "^(icon_[A-Za-z0-9_]+|mdi:[A-Za-z0-9_]+:(filled|outlined|rounded|sharp|two_tone))$"
     },
     "commandRef": {
       "type": "string",
