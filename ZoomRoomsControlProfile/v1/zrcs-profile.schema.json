@@ -16,8 +16,8 @@
     },
     "info": {
       "type": "object",
-      "description": "Optional metadata header. Ignored by Zoom Rooms \u2014 purely for human/tooling reference.",
-      "additionalProperties": false,
+      "description": "Optional metadata header. Ignored by Zoom Rooms \u2014 purely for human/tooling reference. The listed properties are common conventions surfaced for autocomplete; users may add or omit any keys they like.",
+      "additionalProperties": true,
       "properties": {
         "customer": {
           "type": "string",
