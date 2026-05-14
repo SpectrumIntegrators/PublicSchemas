@@ -176,7 +176,10 @@
               "model": {
                 "const": "iTachIP2SL"
               }
-            }
+            },
+            "required": [
+              "model"
+            ]
           },
           "then": {
             "properties": {
@@ -206,7 +209,10 @@
               "model": {
                 "const": "iTachIP2CC"
               }
-            }
+            },
+            "required": [
+              "model"
+            ]
           },
           "then": {
             "properties": {
@@ -230,7 +236,10 @@
               "model": {
                 "const": "GenericNetworkAdapter"
               }
-            }
+            },
+            "required": [
+              "model"
+            ]
           },
           "then": {
             "properties": {
