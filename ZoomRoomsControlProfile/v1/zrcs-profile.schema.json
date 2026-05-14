@@ -182,6 +182,11 @@
             ]
           },
           "then": {
+            "not": {
+              "required": [
+                "com"
+              ]
+            },
             "properties": {
               "ip": {
                 "$ref": "#/definitions/privateIpv4"
@@ -215,6 +220,11 @@
             ]
           },
           "then": {
+            "not": {
+              "required": [
+                "com"
+              ]
+            },
             "properties": {
               "ip": {
                 "$ref": "#/definitions/privateIpv4"
@@ -242,6 +252,12 @@
             ]
           },
           "then": {
+            "not": {
+              "anyOf": [
+                { "required": ["uuid"] },
+                { "required": ["com"] }
+              ]
+            },
             "properties": {
               "ip": {
                 "$ref": "#/definitions/genericNetworkUrl"
@@ -272,6 +288,12 @@
             "required": [
               "com"
             ],
+            "not": {
+              "anyOf": [
+                { "required": ["uuid"] },
+                { "required": ["ip"] }
+              ]
+            },
             "properties": {
               "ports": {
                 "items": {
